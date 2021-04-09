@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             x:Class="Todo.TodoItemPage" Title="{Binding Name}">
+
+    <StackLayout Margin="20" VerticalOptions="StartAndExpand">
+        <Label Text="Note"/>
+        <Entry Text="{Binding Notes}" TextChanged="TextChange" Margin="0,0,0,30"/>
+        <StackLayout Margin="0,20,0,0" Orientation="Horizontal" HorizontalOptions="Center">
+            <DatePicker Date="{Binding myDate}" Format="D"/>
+            
+            <TimePicker Time="{Binding myTime, StringFormat='{hh:mm}'}"/>
+        </StackLayout>
+  
+        <Button Text="Save" Clicked="OnSaveClicked" />
+        <Button Text="Delete" Clicked="OnDeleteClicked" />
+    </StackLayout>
+</ContentPage>
