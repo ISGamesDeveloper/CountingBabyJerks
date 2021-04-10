@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Text;
+using ListViewWithSubListView.Views;
 
 namespace ListViewWithSubListView.Models
 {
@@ -9,7 +9,7 @@ namespace ListViewWithSubListView.Models
     {
         public string Name { get; set; }
 
-        public List<Room> Rooms { get; set; }
+        public List<TodoItem> Rooms { get; set; }
 
         public bool IsVisible { get; set; } = false;
 
@@ -17,27 +17,10 @@ namespace ListViewWithSubListView.Models
         {
         }
 
-        public Hotel(string  name, List<Room> rooms)
+        public Hotel(string  name, List<TodoItem> rooms)
         {
             Name = name;
             Rooms = rooms;
-        }
-    }
-
-    public class Room
-    {
-        public string RoomName { get; set; }
-        public int TypeID { get; set; }
-
-        public Room()
-        {
-
-        }
-
-        public Room(string name, int typeID)
-        {
-            RoomName = name;
-            TypeID = typeID;
         }
     }
 }

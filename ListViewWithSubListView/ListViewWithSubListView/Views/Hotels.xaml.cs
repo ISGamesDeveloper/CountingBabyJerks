@@ -1,14 +1,13 @@
 ﻿using ListViewWithSubListView.Models;
 using ListViewWithSubListView.ViewModels;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Xamarin.Forms;
-using SQLite;
 using Todo;
+using Xamarin.Forms;
 
 namespace ListViewWithSubListView.Views
 {
@@ -21,52 +20,40 @@ namespace ListViewWithSubListView.Views
             set { BindingContext = value; }
         }
 
-        public List<ListDate> listDates = new List<ListDate>();
+        private List<Hotels> ListHotel = new List<Hotels>();
 
         protected override async void OnAppearing()
         {
-            /*
-            base.OnAppearing();
-            TodoItemDatabase database = await TodoItemDatabase.Instance;
-
-            await SetListDates(database);
-
-            listView.ItemsSource = listDates;
-            */
-
-            
             try
             {
                 base.OnAppearing();
 
                 if (ViewModel.Items.Count == 0)
                 {
-                  ViewModel.LoadHotelsCommand.Execute(null);
+                    ViewModel.listDates1 = await SetListDates();
+               
+                    ViewModel.LoadHotelsCommand.Execute(null);
                 }           
             }
             catch (Exception Ex)
             {
                 Debug.WriteLine(Ex.Message);
             }
-            
         }
 
         public Hotels(HotelsGroupViewModel viewModel)
 		{
 			InitializeComponent();
-            this.ViewModel = viewModel;           //
+            this.ViewModel = viewModel;           
         }
 
-        public void OnButtonClicked(object s, EventArgs e)
+        public async Task<List<ListDate>> SetListDates()
         {
-            Console.WriteLine("111");
-        }
-
-        public async Task SetListDates(TodoItemDatabase database)
-        {
+            TodoItemDatabase database = await TodoItemDatabase.Instance;
+            //await SaveItemAsync();
             var allTodo = await database.GetItemsAsync();
-
-            listDates.Clear();
+            Console.WriteLine("allTodo: " + allTodo.Count);
+            List<ListDate> listDates = new List<ListDate>();
 
             for (int i = 0; i < allTodo.Count; i++)
             {
@@ -81,62 +68,85 @@ namespace ListViewWithSubListView.Views
 
                     if (d1.Equals(d2))
                     {
-                        listDates[k].todoItem.Add(allTodo[i]);
+                        listDates[k].Name = allTodo[i].Name;
+                        listDates[k].IsVisible = false;
+                        listDates[k].Rooms.Add(allTodo[i]);
                         isEquals = true;
                     }
                 }
 
                 if (!isEquals)
                 {
+                    Console.WriteLine("!isEquals: " + i);
                     listDates.Add(new ListDate()
                     {
                         date = allTodo[i].myDate,
-                        time = allTodo[i].myTime,
-                        IsChecked = false
+                        time = allTodo[i].myTime
                     });
 
-                    listDates[listDates.Count - 1].todoItem.Add(allTodo[i]);
+                    Console.WriteLine("added");
+                    listDates[listDates.Count - 1].Name = allTodo[i].Name;
+                    listDates[listDates.Count - 1].IsVisible = false;
+                    listDates[listDates.Count - 1].Rooms.Add(allTodo[i]);
                 }
             }
 
-            Console.WriteLine(listDates.Count);
+            Console.WriteLine("listDates: " + listDates.Count);
+            return listDates;
+        }
+
+        public async Task SaveItemAsync()
+        {
+            TodoItem item = new TodoItem()
+            {
+                ID = 0,
+                IsChecked = false,
+                Name = "test",
+                Notes = "test note",
+                HasText = true,
+                myDate = new DateTime(2015,03,15),
+                myTime = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second)
+        };
+
+            TodoItemDatabase database = await TodoItemDatabase.Instance;
+            await database.SaveItemAsync(item);
         }
     }
 
-    public class ListDate : INotifyPropertyChanged
+    public class ListDate
     {
         public DateTime date;
         public TimeSpan time;
 
-        public List<TodoItem> todoItem = new List<TodoItem>();
+        public List<TodoItem> Rooms = new List<TodoItem>();
 
+        public string Name { get; set; }
+        public bool IsVisible { get; set; } = false;
 
-        private bool isChecked;
-        public bool IsChecked
+        public ListDate()
         {
-            get
-            {
-                return isChecked;
-            }
-            set
-            {
-                if (isChecked != value)
-                {
-                    isChecked = value;
-                    NotifyPropertyChanged();
-                }
-            }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        public ListDate(string name, List<TodoItem> rooms)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            Name = name;
+            Rooms = rooms;
         }
     }
 
     public class TodoItem
     {
+        public TodoItem()
+        {
+
+        }
+
+        public TodoItem(string name, int typeID)
+        {
+            Name = name;
+            ID = typeID;
+        }
+
         [PrimaryKey, AutoIncrement]
         public int ID { get; set; }
         public bool IsChecked = false;

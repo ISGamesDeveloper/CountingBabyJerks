@@ -1,4 +1,5 @@
 ﻿using ListViewWithSubListView.Models;
+using ListViewWithSubListView.Views;
 using MvvmHelpers;
 using System;
 using System.Collections.Generic;
@@ -14,12 +15,12 @@ namespace ListViewWithSubListView.ViewModels
         // It's a backup variable for storing CountryViewModel objects
         private ObservableRangeCollection<RoomViewModel> hotelRooms = new ObservableRangeCollection<RoomViewModel>();
        
-        public HotelViewModel(Hotel hotel, bool expanded = false)
+        public HotelViewModel(ListDate hotel, bool expanded = false)
         {
             this.Hotel = hotel;
             this._expanded = expanded;
 
-            foreach (Room room in hotel.Rooms)
+            foreach (TodoItem room in hotel.Rooms)
             {
                 hotelRooms.Add(new RoomViewModel(room));
             }
@@ -67,8 +68,8 @@ namespace ListViewWithSubListView.ViewModels
                 { return "arrow_b.png"; }
             }
         }
-        public string Name { get { return Hotel.Name; } }
-        public Hotel Hotel { get; set; }
+        public string Name { get { return Hotel.date.ToString(); } }
+        public ListDate Hotel { get; set; }
 
     }
 }

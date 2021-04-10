@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using ListViewWithSubListView.Views;
 using SQLite;
+using static ListViewWithSubListView.Views.Hotels;
 
 namespace Todo
 {

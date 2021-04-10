@@ -1,4 +1,5 @@
 ﻿using ListViewWithSubListView.Models;
+using ListViewWithSubListView.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,12 +8,14 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using static ListViewWithSubListView.Views.Hotels;
 
 namespace ListViewWithSubListView.ViewModels
 {
     public class HotelsGroupViewModel : BaseViewModel
     {
         private HotelViewModel _oldHotel;
+        public List<ListDate> listDates1 = new List<ListDate>();
 
         private ObservableCollection<HotelViewModel> items;
         public ObservableCollection<HotelViewModel> Items
@@ -27,6 +30,7 @@ namespace ListViewWithSubListView.ViewModels
 
         public HotelsGroupViewModel()
         {
+            Console.WriteLine("HotelsGroupViewModel");
             items = new ObservableCollection<HotelViewModel>();
             Items = new ObservableCollection<HotelViewModel>();
             LoadHotelsCommand = new Command(async () => await ExecuteLoadItemsCommandAsync());
@@ -56,30 +60,44 @@ namespace ListViewWithSubListView.ViewModels
         }
         async System.Threading.Tasks.Task ExecuteLoadItemsCommandAsync()
         {
+            Console.WriteLine("listDates: " + listDates1.Count);
             try
             {
                 if (IsBusy)
                     return;
                 IsBusy = true;
                 Items.Clear();
-                List<Room> Hotel1rooms = new List<Room>() { new Room("Jasmine", 1), new Room("Flower Suite", 2), new Room("narcissus", 1)
-                };
-                List<Room> Hotel2rooms = new List<Room>()
-                {
-                    new Room("Princess", 1), new Room("Royale", 1), new Room("Queen", 1)
-                };
-                List<Room> Hotel3rooms = new List<Room>()
-                {
-                    new Room("Marhaba", 1), new Room("Marhaba Salem", 1), new Room("Salem Royal", 1), new Room("Wedding Roome", 1), new Room("Wedding Suite", 2)
-                };
-                List<Hotel> items = new List<Hotel>() { new Hotel("Yasmine Hammamet", Hotel1rooms), new Hotel("El Mouradi Hammamet,", Hotel2rooms), new Hotel("Marhaba Royal Salem", Hotel3rooms) };
 
-                if (items != null && items.Count > 0)
+
+
+                /*
+                List<TodoItem> Hotel1rooms = new List<TodoItem>() { new TodoItem("Jasmine", 0), new TodoItem("Flower Suite", 2), new TodoItem("narcissus", 1)
+                };
+                List<TodoItem> Hotel2rooms = new List<TodoItem>()
                 {
-                    foreach (var hotel in items)
-                        Items.Add(new HotelViewModel(hotel));
+                    new TodoItem("Princess", 1), new TodoItem("Royale", 1), new TodoItem("Queen", 1)
+                };
+                List<TodoItem> Hotel3rooms = new List<TodoItem>()
+                {
+                    new TodoItem("Marhaba", 1), new TodoItem("Marhaba Salem", 1), new TodoItem("Salem Royal", 1), new TodoItem("Wedding Roome", 1), new TodoItem("Wedding Suite", 2)
+                };
+                List<ListDate> items = new List<ListDate>() { new ListDate("Yasmine Hammamet", Hotel1rooms), new ListDate("El Mouradi Hammamet,", Hotel2rooms), new ListDate("Marhaba Royal Salem", Hotel3rooms) };
+                */
+     
+
+                for (int i = 0; i < listDates1.Count; i++)
+                {
+                    Items.Add(new HotelViewModel(listDates1[i]));
                 }
-                else { IsEmpty = true; }
+
+                
+               // if (items != null && items.Count > 0)
+                //{
+                  //  foreach (var hotel in items)
+                    //    Items.Add(new HotelViewModel(hotel));
+                //}
+                //else { IsEmpty = true; }
+                
 
             }
             catch (Exception ex)

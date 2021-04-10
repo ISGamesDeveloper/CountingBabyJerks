@@ -21,15 +21,13 @@
                         <DataTemplate>
                             <ViewCell>
                                 <StackLayout Orientation="Horizontal"  VerticalOptions="Center">
-                                        <Button Text="{Binding .RoomName}"
-                                            VerticalOptions="FillAndExpand"
-                                            HorizontalOptions="FillAndExpand"
+                                        <Label
+                                            VerticalOptions="Center"
                                             FontAttributes="Bold"
                                             FontSize="Medium"
+                                            Text="{Binding .RoomName}"
                                             TextColor="Black"
-                                            BackgroundColor="AliceBlue"
-    
-                                            Clicked="OnButtonClicked" />        
+                                            VerticalTextAlignment="Center" />                                  
                                 </StackLayout>                                   
                             </ViewCell>
                         </DataTemplate>
@@ -43,7 +41,7 @@
                                                 FontSize="Small"
                                                 Text="{Binding Name}"
                                                 TextColor="Gray"
-                                                VerticalTextAlignment="Center"/>
+                                                VerticalTextAlignment="Center" />
                                     <Image x:Name="ImgA" Source="{Binding StateIcon}"  Margin="0,0,5,0" HeightRequest="20" WidthRequest="20" HorizontalOptions="End"/>
                                     <Grid.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding Source={x:Reference currentPage}, Path=BindingContext.RefreshItemsCommand}"  NumberOfTapsRequired="1" CommandParameter="{Binding .}"/>
